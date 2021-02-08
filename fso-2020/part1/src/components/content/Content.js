@@ -1,7 +1,7 @@
 import React from 'react'
 import Part from '../part/Part'
 
-const Content = parts => {
+const Content = ({parts}) => {
   return (
     <div>
       <Part part={parts[0]}  />

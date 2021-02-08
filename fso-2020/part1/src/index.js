@@ -7,7 +7,6 @@ import Total from './components/total/Total'
 const App = () => {
   const course = {
     name: 'Half Stack application development',
-
     parts: [
       {
         name: 'Fundamentals of React',
@@ -23,7 +22,6 @@ const App = () => {
       }
     ]
   }
-  console.log(course)
 
   return (
     <div>
