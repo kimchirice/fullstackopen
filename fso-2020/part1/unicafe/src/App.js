@@ -1,5 +1,5 @@
-import React, {useState,  } from 'react'
-import './App.css';
+import React, {useState  } from 'react'
+import './App.css'
 
 function App() {
 
@@ -8,19 +8,19 @@ function App() {
   const [neutralCount, setNeutralCount] = useState(initialCount)
   const [badCount, setBadCount] = useState(initialCount)
   
-  const handleGoodClick = () =>{
-    let currentGoodCount = goodCount
-    setGoodCount(currentGoodCount++)
+  const handleGoodClick = (e) =>{
+    e.preventDefault()
+    setGoodCount(prev => prev += 1 )
   }
 
-  const handleBadClick = ()=>{
-    let currentBadCount = badCount
-    setBadCount(currentBadCount++)
+  const handleBadClick = (e)=>{
+    e.preventDefault()
+    setBadCount(prev => prev += 1 )
   }
 
-  const handleNeutralClick = () =>{
-    let currentNeutralCount = neutralCount
-    setNeutralCount(currentNeutralCount++)
+  const handleNeutralClick = (e) =>{
+    e.preventDefault()
+    setNeutralCount(prev => prev += 1)
   }
 
   return (
@@ -28,33 +28,32 @@ function App() {
        <div>
         <h2>give feedback</h2>
         <button onClick={handleGoodClick}>good</button>
-        <br></br>
+        
         <button onClick={handleNeutralClick}>neutral</button>
-        <br></br>
+        
         <button onClick={handleBadClick}>bad</button>
       </div>
       <div>
         <h2>statistics</h2>
         <table>
           <tr>
-            <td>&nbsp;</td>
-          <td>good</td>
-          <td>
-            {goodCount}
-          </td>
-        </tr>
-        <tr>
-          <td>neutral</td>
-          <td>
-            {neutralCount}
-          </td>
-        </tr>
-        <tr>
-          <td>bad</td>
-          <td>
-            {badCount}
-          </td>
-        </tr>
+            <td>good</td>
+            <td>
+              {goodCount}
+            </td>
+          </tr>
+          <tr>
+            <td>neutral</td>
+            <td>
+              {neutralCount}
+            </td>
+          </tr>
+          <tr>
+            <td>bad</td>
+            <td>
+              {badCount}
+            </td>
+          </tr>
         </table>
       </div>
     </div>
