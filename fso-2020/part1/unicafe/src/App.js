@@ -1,5 +1,6 @@
 import React, {useState  } from 'react'
 import './App.css'
+import Statistics from './components/statistics/Statistics'
 
 function App() {
 
@@ -33,47 +34,12 @@ function App() {
         
         <button onClick={handleBadClick}>bad</button>
       </div>
-      <div>
-        <h2>statistics</h2>
-        <table>
-          <tr>
-            <td>good</td>
-            <td>
-              {goodCount}
-            </td>
-          </tr>
-          <tr>
-            <td>neutral</td>
-            <td>
-              {neutralCount}
-            </td>
-          </tr>
-          <tr>
-            <td>bad</td>
-            <td>
-              {badCount}
-            </td>
-          </tr>
-          <tr>
-            <td>all</td>
-            <td>
-              { goodCount + neutralCount + badCount }
-            </td>
-          </tr>
-          <tr>
-            <td>average</td>
-            <td>
-              {(goodCount + neutralCount - badCount) / (goodCount + neutralCount + badCount)}
-            </td>
-          </tr>
-          <tr>
-            <td>positive</td>
-            <td>
-            {(goodCount + neutralCount) / (goodCount + neutralCount + badCount)}
-            </td>
-          </tr>
-        </table>
-      </div>
+      <Statistics 
+        goodCount={goodCount} 
+        neutralCount={neutralCount} 
+        badCount={badCount} 
+      />
+
     </div>
   );
 }
