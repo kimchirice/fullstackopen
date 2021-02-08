@@ -33,15 +33,13 @@ function App() {
           handleGoodClick={handleGoodClick} 
           handleNeutralClick={handleNeutralClick} 
           handleBadClick={handleBadClick}
-        />
-           
+        /> 
       </div>
       <Statistics 
         goodCount={goodCount} 
         neutralCount={neutralCount} 
         badCount={badCount} 
       />
-
     </div>
   );
 }

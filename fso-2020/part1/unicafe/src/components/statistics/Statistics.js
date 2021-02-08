@@ -3,7 +3,7 @@ import Statistic from '../statistic/Statistic'
 
 const Statistics = ({goodCount, neutralCount, badCount}) => {
     return (
-      <div>
+      <div className="statistics">
         <h2>statistics</h2>
         { 
           (goodCount === 0 && neutralCount === 0 && badCount === 0) && 
