@@ -11,9 +11,10 @@
 
   * ## 0.4 new note
     ### note. I had to reset Chrome devtool to be able to record the sequence properly
-    [diagram_new_note](link_to_be_updated)
+    ![diagram_new_note](form_submission.png)
+  
   * ## 0.5: Single page app
-    [diagram_user_goes_SPA](link_to_be_updated)
+    ![diagram_user_goes_SPA](user_goes_SPA.png)
 
   * ## 0.6: New note
-    [diagram_new_note_SPA](link_to_be_updated)
+    ![diagram_new_note_SPA](form_submission.png)
