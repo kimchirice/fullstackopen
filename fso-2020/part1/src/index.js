@@ -4,6 +4,7 @@ import Header from './components/header/Header'
 import Content from './components/content/Content'
 import Total from './components/total/Total'
 
+
 const App = () => {
   const course = {
     name: 'Half Stack application development',
