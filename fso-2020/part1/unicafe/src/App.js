@@ -54,6 +54,24 @@ function App() {
               {badCount}
             </td>
           </tr>
+          <tr>
+            <td>all</td>
+            <td>
+              { goodCount + neutralCount + badCount }
+            </td>
+          </tr>
+          <tr>
+            <td>average</td>
+            <td>
+              {(goodCount + neutralCount - badCount) / (goodCount + neutralCount + badCount)}
+            </td>
+          </tr>
+          <tr>
+            <td>positive</td>
+            <td>
+            {(goodCount + neutralCount) / (goodCount + neutralCount + badCount)}
+            </td>
+          </tr>
         </table>
       </div>
     </div>
