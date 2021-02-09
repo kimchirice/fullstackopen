@@ -14,7 +14,7 @@ const App = () => {
   const [points, setPoints] = useState(initialPoints)
   console.log(points)
 
-  const handleClick = (e) => {
+  const handleNext = (e) => {
     e.preventDefault()
     const maximum = anecdotes.length - 1
     setSelected(getRandomIntInclusive(0, maximum))
@@ -23,11 +23,14 @@ const App = () => {
 
   const handleVote = (e) => {
     e.preventDefault()
+    // check current selected anecdote and its realted point
+    // then add one more point to it
     let newPoint = points[selected] + 1
     setPoints(prev => (
       {
-        [selected]: newPoint,
         ...prev,
+        [selected]: newPoint,
+        
       })
     )
   }
@@ -40,7 +43,7 @@ const App = () => {
       </div>
       <div>
         <button onClick={handleVote}>vote</button>
-        <button onClick={handleClick}>Next anecdote</button>
+        <button onClick={handleNext}>next anecdote</button>
       </div>
     </div>)
 }
