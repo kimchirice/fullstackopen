@@ -12,8 +12,12 @@ body {
   align-items: center;
 }
 
-p {
-  max-width: 40vw;
+h4 {
+  display: inline-block;
+  margin-left: 4px;
+  margin-right: auto;
+  margin-bottom: 0;
+  text-align: left;
 }
 
 code {
