@@ -11,8 +11,12 @@ const App = () => {
     4: 0,
     5: 0 
   }
+
+  const initialVote = 0
+
   const [selected, setSelected] = useState(2)
   const [points, setPoints] = useState(initialPoints)
+  const [maxVote, setMaxVote] = useState(initialVote)
   console.log(points)
 
   const handleNext = (e) => {
@@ -34,19 +38,28 @@ const App = () => {
         
       })
     )
+    
+    let maxVoteNew = Object.keys(points).reduce((maxVote, key) => (maxVote === undefined || points[key] > points[maxVote]) ? +key : maxVote)
+    setMaxVote(maxVoteNew);
   }
 
   return (
     <div>
       <div>
+        <h2>Anecdote of the day</h2>
         <h4>{anecdotes[selected]}</h4>
         <p>has {points[selected]} votes</p>
-      </div>
-      <div>
         <button onClick={handleVote}>vote</button>
         <button onClick={handleNext}>next anecdote</button>
       </div>
-    </div>)
+      <div>
+        <h2>Anecdote with most votes</h2>
+        <h4>{anecdotes[maxVote]}</h4>
+        <p>has {points[maxVote]} votes</p> 
+       
+      </div>    
+    </div>
+  )
 }
 
 const getRandomIntInclusive = (min, max) => {
