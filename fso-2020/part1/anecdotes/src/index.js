@@ -2,20 +2,44 @@ import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const App = (props) => {
-  const [selected, setSelected] = useState(0)
+const App = () => {
+  const initialPoints = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    5: 0 
+  }
+  const [selected, setSelected] = useState(2)
+  const [points, setPoints] = useState(initialPoints)
+  console.log(points)
 
   const handleClick = (e) => {
     e.preventDefault()
-    setSelected(getRandomIntInclusive(0, anecdotes.length))
+    const maximum = anecdotes.length - 1
+    setSelected(getRandomIntInclusive(0, maximum))
+    console.log(`after clicked, now selected is ${selected}`)
+  }
+
+  const handleVote = (e) => {
+    e.preventDefault()
+    let newPoint = points[selected] + 1
+    setPoints(prev => (
+      {
+        [selected]: newPoint,
+        ...prev,
+      })
+    )
   }
 
   return (
     <div>
       <div>
-        {props.anecdotes[selected]}
+        {anecdotes[selected]}
+        <p>has {points[selected]} votes</p>
       </div>
       <div>
+        <button onClick={handleVote}>vote</button>
         <button onClick={handleClick}>Next anecdote</button>
       </div>
     </div>)
