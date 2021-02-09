@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 
 const notes = [
   {
@@ -32,7 +31,7 @@ const App = (props) => {
       <ul>
         {notes.map(note => 
           <li key={note.id} >
-            note.content
+            {note.content}
           </li>  )}
 
       </ul>
