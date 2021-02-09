@@ -8,6 +8,7 @@ const App = () => {
     1: 0,
     2: 0,
     3: 0,
+    4: 0,
     5: 0 
   }
   const [selected, setSelected] = useState(2)
@@ -38,7 +39,7 @@ const App = () => {
   return (
     <div>
       <div>
-        {anecdotes[selected]}
+        <h4>{anecdotes[selected]}</h4>
         <p>has {points[selected]} votes</p>
       </div>
       <div>
