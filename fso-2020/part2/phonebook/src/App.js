@@ -10,6 +10,12 @@ const App= () => {
 
   const [ newName, setNewName ] = useState('')
 
+  const alreadyAdded = (name) =>{
+    return persons.find(person=> person.name === name)
+  }
+
+  const alreadyAddedWarnning = (name) => window.alert(`${name} is already added to phonebook`)
+
   const handleChange = (e) => {
     e.preventDefault()
     setNewName(e.target.value)
@@ -18,8 +24,12 @@ const App= () => {
   const handleSubmit = (e) =>{
     e.preventDefault()
     console.log('this event is', e)
-    const newNameObject = {name: newName}
-    setPersons(persons.concat(newNameObject))
+    if (alreadyAdded(newName)) {
+      alreadyAddedWarnning(newName)
+    } else {
+      const newNameObject = {name: newName}
+      setPersons(persons.concat(newNameObject))
+    }
     setNewName('')
   }
 
