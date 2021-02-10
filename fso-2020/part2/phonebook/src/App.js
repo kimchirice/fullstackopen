@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import Person from './person/Person'
 
 const App= () => {
   const [ persons, setPersons ] = useState(
@@ -17,11 +18,8 @@ const App= () => {
   const handleSubmit = (e) =>{
     e.preventDefault()
     console.log('this event is', e)
-    
     const newNameObject = {name: newName}
-    setPersons(prev => {
-     prev.concat(newNameObject)
-    })
+    setPersons(persons.concat(newNameObject))
     setNewName('')
   }
 
@@ -30,7 +28,10 @@ const App= () => {
       <h2>Phonebook</h2>
       <form >
         <div>
-          name: <input value={newName} onChange={handleChange}/>
+          name: <input 
+                  value={newName} 
+                  onChange={handleChange}
+                />
         </div>
         <div>
           <button type="submit" onClick={handleSubmit} >add</button>
@@ -39,11 +40,13 @@ const App= () => {
 
       <div>debug: newName is {newName}</div>
       <h2>Numbers</h2>
-      <ul>
+      <div>
+        {persons.map( person => 
+          <Person name={person.name} />
+        )}
+      </div>
       
-      <li>1</li>
-        <li>2</li>
-      </ul>
+      
       
     </div>
   )
