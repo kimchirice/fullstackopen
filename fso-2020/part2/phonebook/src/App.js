@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
-import Person from './person/Person'
+import Person from './components/person/Person'
+import Filter from './components/filter/Filter'
+import PersonForm from './components/personForm/PersonForm'
 import toTitleCase from './utils/toTitleCase'
 
 const App= () => {
@@ -65,36 +67,18 @@ const App= () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input
-                            value={filter}
-                            onChange={handleChangeFilter}
-                          />
-      </div>
-      <form >
-      <h2>Add a new</h2>
-        <div>
-          name: <input 
-                  value={newName} 
-                  onChange={handleChange}
-                />
-        </div>
-        <div>
-          
-          number:<input
-                   value={newNumber}
-                   onChange={handleAddNumber}
-                 />
-        </div>
-        <div>
-          <button type="submit" onClick={handleSubmit} >add</button>
-        </div>
-      </form>
-
-      <div>debug: newName is {newName}</div>
-      <div>debug: newNumber is {newNumber}</div>
-      <div>debug: filter is {filter}</div>
-
+      
+      <Filter filter={filter} handleChangeFilter={handleChangeFilter} />
+      
+      <h3>Add a new</h3>
+      
+      <PersonForm 
+        newName={newName}
+        handleChange={handleChange} 
+        newNumber={newNumber}
+        handleAddNumber={handleAddNumber}
+        handleSubmit={handleSubmit}
+      /> 
 
       <h2>Numbers</h2>
       <div>
