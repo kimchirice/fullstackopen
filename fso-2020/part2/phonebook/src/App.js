@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Person from './person/Person'
+import toTitleCase from './utils/toTitleCase'
 
 const App= () => {
   const [ persons, setPersons ] = useState(
@@ -14,10 +15,10 @@ const App= () => {
   const [ newNumber, setNewNumber] = useState('')
 
   const alreadyAdded = (name) =>{
-    return persons.find(person=> person.name === name)
+    return persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
   }
 
-  const alreadyAddedWarnning = (name) => window.alert(`${name} is already added to the phonebook`)
+  const alreadyAddedWarnning = (name) => window.alert(`${name.toUpperCase()} is already added to the phonebook`)
 
   const handleChange = (e) => {
     setNewName(e.target.value)
@@ -34,7 +35,7 @@ const App= () => {
       alreadyAddedWarnning(newName)
     } else {
       const newNameObject = {
-        name: newName,
+        name: toTitleCase(newName),
         number: newNumber
       }
       setPersons(persons.concat(newNameObject))
