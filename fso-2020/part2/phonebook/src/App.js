@@ -3,16 +3,26 @@ import Person from './person/Person'
 import toTitleCase from './utils/toTitleCase'
 
 const App= () => {
-  const [ persons, setPersons ] = useState(
+  const [persons, setPersons] = useState(
     [
       { name: 'Arto Hellas',
         number: '040-1234567'
-      }
+      },
+      { name: 'Ada Lovelace', 
+        number: '39-44-5323523'
+      },
+      { name: 'Dan Abramov', 
+        number: '12-43-234345'
+      },
+      { name: 'Mary Poppendieck', 
+        number: '39-23-6423122'
+      },
     ]
   ) 
 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber] = useState('')
+  const [newName, setNewName ] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
 
   const alreadyAdded = (name) =>{
     return persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
@@ -24,8 +34,16 @@ const App= () => {
     setNewName(e.target.value)
   }
 
+  const handleChangeFilter = (e) => {
+    setFilter(e.target.value)
+  }
+
   const handleAddNumber = (e) =>{
     setNewNumber(e.target.value)
+  }
+
+  const searchNames = (filter) => {
+    return persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
   }
 
   const handleSubmit = (e) =>{
@@ -47,7 +65,14 @@ const App= () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with <input
+                            value={filter}
+                            onChange={handleChangeFilter}
+                          />
+      </div>
       <form >
+      <h2>Add a new</h2>
         <div>
           name: <input 
                   value={newName} 
@@ -55,6 +80,7 @@ const App= () => {
                 />
         </div>
         <div>
+          
           number:<input
                    value={newNumber}
                    onChange={handleAddNumber}
@@ -67,13 +93,19 @@ const App= () => {
 
       <div>debug: newName is {newName}</div>
       <div>debug: newNumber is {newNumber}</div>
+      <div>debug: filter is {filter}</div>
+
 
       <h2>Numbers</h2>
       <div>
-        {persons.map( person => 
+        { filter === '' && persons.map( person => 
           <Person name={person.name} number={person.number} />
         )}
+        { filter !== '' && searchNames(filter).map( person => 
+          < Person name={person.name} number={person.number} />
+        )}
       </div>
+      
       
       
       
