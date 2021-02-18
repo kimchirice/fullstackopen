@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import axios from "axios";
+import axios from 'axios'
 import Country from './components/country/Country'
+import './App.css'
 
-function App() {
-// todos
-// add a button when multiple results, 
-
+const App = () => {
     const [filter, setFilter] = useState('')
     const [countries, setCountries] = useState([])
 
