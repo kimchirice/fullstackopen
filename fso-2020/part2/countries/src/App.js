@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios";
+import Country from './components/country/Country'
 
 function App() {
+// todos
+// add a button when multiple results, 
+
     const [filter, setFilter] = useState('')
     const [countries, setCountries] = useState([])
 
@@ -31,6 +35,10 @@ function App() {
         }
     }
 
+    const handleShowButton = (event) => {
+        console.log('what is include', event.target.value)
+    }
+
     return (
     <div className="App">
       find countries<input
@@ -44,23 +52,19 @@ function App() {
         
         {filter !== '' && handleSearch(filter).length > 10 && tooManyCountries(filter)}
         {filter !== '' && handleSearch(filter).length <= 10 && handleSearch(filter).length > 1 && handleSearch(filter).map(country => {
-            return <div key={country.numericCode}>{country.name}</div>
+            return (<div key={country.numericCode}>
+                {country.name}
+                <button onClick={handleShowButton}>show</button>
+                </div>)
         })}
-        { handleSearch(filter).length === 1 && handleSearch(filter).map(country=> {
-            return (<div>
-                    <h2>{country.name}</h2>
-                    <p>capital {country.capital}</p>
-                    <p>population {country.population}</p>
-            
-        
-                    <h5>languages</h5>
-                    {country.languages.map(language => {
-                        return <li key={language.name}>{language.name}</li>    
-                    })}
-
-                    <img src={country.flag} alt="country flag"/>
-
-                    </div>)
+        { handleSearch(filter).length === 1 && handleSearch(filter).map(country => {
+            return <Country 
+                      name={country.name}
+                      capital={country.capital} 
+                      population={country.population} 
+                      language={country.languages}
+                      flag={country.flag} 
+                    /> 
             })
         }
 
