@@ -13,6 +13,8 @@ function App() {
         setFilter(e.target.value)
     }
 
+    const [showCountry, setShowCountry] = useState(false)
+
     useEffect(() => {
         const countriesURL = `https://restcountries.eu/rest/v2/name/${filter}`
         console.log("current url is ", countriesURL)
@@ -37,6 +39,8 @@ function App() {
 
     const handleShowButton = (event) => {
         console.log('what is include', event.target.value)
+        setShowCountry(!showCountry)
+        console.log(`after toggled the showCounty is `, showCountry )
     }
 
     return (
@@ -53,8 +57,17 @@ function App() {
         {filter !== '' && handleSearch(filter).length > 10 && tooManyCountries(filter)}
         {filter !== '' && handleSearch(filter).length <= 10 && handleSearch(filter).length > 1 && handleSearch(filter).map(country => {
             return (<div key={country.numericCode}>
-                {country.name}
-                <button onClick={handleShowButton}>show</button>
+                        {country.name}
+                        <button onClick={handleShowButton}>show</button>
+                        {
+                           showCountry && <Country 
+                      name={country.name}
+                      capital={country.capital} 
+                      population={country.population} 
+                      languages={country.languages}
+                      flag={country.flag} 
+                    /> 
+                        }
                 </div>)
         })}
         { handleSearch(filter).length === 1 && handleSearch(filter).map(country => {
@@ -62,7 +75,7 @@ function App() {
                       name={country.name}
                       capital={country.capital} 
                       population={country.population} 
-                      language={country.languages}
+                      languages={country.languages}
                       flag={country.flag} 
                     /> 
             })
