@@ -1,90 +1,57 @@
-import React, {useState, useEffect} from 'react'
-import axios from 'axios'
-import Country from './components/country/Country'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Search from './components/search/Search';
+import Result from './components/result/Result';
+import Country from './components/country/Country';
 
 const App = () => {
-    const [filter, setFilter] = useState('')
-    const [countries, setCountries] = useState([])
+    const [ search, setSearch ] = useState('');
+    const [ countries, setCountries ] = useState([]);
+    const [ weather, setWeather ] = useState({});
 
-    const handleFilter = (e) =>{
-        setFilter(e.target.value)
-    }
-
-    const [showCountry, setShowCountry] = useState(false)
+    const countriesToShow = countries.filter(country => country.name.toLowerCase().includes(search.toLowerCase()));
 
     useEffect(() => {
-        const countriesURL = `https://restcountries.eu/rest/v2/name/${filter}`
-        console.log("current url is ", countriesURL)
-        axios.get(countriesURL)
+        axios
+            .get('https://restcountries.eu/rest/v2/all')
             .then(response => {
-                console.log('data is ', response.data)
-                setCountries(response.data)
+                setCountries(response.data);
             })
-    },[filter])
+    }, [])
 
-  
+    useEffect(() => {
+       const keyWeather = process.env.REACT_APP_WEATHERSTACK_API_KEY;
 
-    const handleSearch = (filter) =>{
-        return countries.filter(country => country.name.toUpperCase().includes(filter.toUpperCase()))
-    }
 
-    const tooManyCountries = (filter) => {
-        if (handleSearch(filter).length > 10) {
-            return 'Too many countries, specific another filter'
+        console.log(`key of weather API is ${keyWeather}`)
+        const countriesToShow = countries.filter(country => country.name.toLowerCase().includes(search.toLowerCase()));
+        if (countriesToShow.length === 1) {
+            const country = countriesToShow[0]
+            axios
+                .get(`http://api.weatherstack.com/current?access_key=${keyWeather}&query=${country.capital}`)
+                .then(response => {
+                    console.log(response)
+                    setWeather(response.data);
+                })
         }
+    }, [countries, search])
+
+    const handleChange = (event) => {
+        setSearch(event.target.value);
     }
 
-    const handleShowButton = (event) => {
-        console.log('what is include', event.target.value)
-        setShowCountry(!showCountry)
-        console.log(`after toggled the showCounty is `, showCountry )
+    const handleClick = (event) => {
+        event.preventDefault();
+        setSearch(event.target.name);
     }
 
     return (
-    <div className="App">
-      find countries<input
-                        value={filter}
-                        onChange={handleFilter}
-                    />
-                    <div>
-                        debug: filter is: {filter}
-                    </div>
-
-        
-        {filter !== '' && handleSearch(filter).length > 10 && tooManyCountries(filter)}
-        {filter !== '' && handleSearch(filter).length <= 10 && handleSearch(filter).length > 1 && handleSearch(filter).map(country => {
-            return (<div key={country.numericCode}>
-                        {country.name}
-                        <button onClick={handleShowButton}>show</button>
-                        {
-                           showCountry && <Country 
-                      name={country.name}
-                      capital={country.capital} 
-                      population={country.population} 
-                      languages={country.languages}
-                      flag={country.flag} 
-                    /> 
-                        }
-                </div>)
-        })}
-        { handleSearch(filter).length === 1 && handleSearch(filter).map(country => {
-            return <Country 
-                      name={country.name}
-                      capital={country.capital} 
-                      population={country.population} 
-                      languages={country.languages}
-                      flag={country.flag} 
-                    /> 
-            })
-        }
-
         <div>
-            <h4>debug</h4>
-            <p>how many matched found {handleSearch(filter).length}</p>
+            <Search search={search} handleChange={handleChange} />
+            { countriesToShow.length !== 1 ? <Result countriesToShow={countriesToShow} handleClick={handleClick} /> : <Country country={countriesToShow[0]} weather={weather} />}
         </div>
-    </div>
-  );
+    )
+
 }
 
 export default App;

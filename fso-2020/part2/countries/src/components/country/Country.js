@@ -1,28 +1,20 @@
-import React from 'react'
+import React from 'react';
+import CountryDetails from '../countryDetails/CountryDetails';
+import Weather from '../weather/Weather';
 
-const Country = ({name, capital, population, languages, flag}) => {
-  console.log('')
-  
-  return (
-    <div>
-      <h2>{name}</h2>
-      <p>capital {capital}</p>
-      <p>population {population}</p>
-      
-      <div>
-        <h5>languages</h5>
-        {
-          languages.map(language => <li key={language.name} >{language.name}</li>)
-        }
-      </div>
-     
-      
-      <div>
-        <img src={flag} alt="country flag"/>
-      </div>
-
-    </div>
-  )
+const Country = ({ country, weather }) => {
+    return (
+        <div>
+            <CountryDetails
+                name={country.name}
+                capital={country.capital}
+                population={country.population}
+                languages={country.languages}
+                flag={country.flag}
+            />
+            <Weather country={country} weather={weather} />
+        </div>
+    )
 }
 
-export default Country
+export default Country;
