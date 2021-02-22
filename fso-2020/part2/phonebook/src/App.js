@@ -5,6 +5,10 @@ import PersonForm from './components/personForm/PersonForm'
 import toTitleCase from './utils/toTitleCase'
 
 const App= () => {
+  //  todos
+  //  * add axios lib
+  //
+
   const [persons, setPersons] = useState(
     [
       { name: 'Arto Hellas',
@@ -48,9 +52,9 @@ const App= () => {
     return persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
   }
 
-  const handleSubmit = (e) =>{
-    e.preventDefault()
-    console.log('this event is', e)
+  const handleSubmit = (event) =>{
+    event.preventDefault()
+    console.log('this event is', event)
     if (alreadyAdded(newName)) {
       alreadyAddedWarnning(newName)
     } else {
@@ -60,6 +64,7 @@ const App= () => {
       }
       setPersons(persons.concat(newNameObject))
     }
+
     setNewName('')
     setNewNumber('')
   }
