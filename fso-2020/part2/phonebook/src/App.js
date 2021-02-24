@@ -100,16 +100,23 @@ const App= () => {
       <h2>Numbers</h2>
       <div>
         { filter === '' && persons !== null && persons.map( person =>
-          <Person name={person.name} number={person.number} id={person.id} handleDelete={handleDelete}/>
+          <Person
+              key={person.id}
+              name={person.name}
+              number={person.number}
+              id={person.id}
+              handleDelete={handleDelete}
+          />
         )}
         { filter !== '' && persons !== null && searchNames(filter).map( person =>
-          < Person name={person.name} number={person.number} id={person.id} handleDelete={handleDelete} />
+          < Person
+              name={person.name}
+              number={person.number}
+              id={person.id}
+              handleDelete={handleDelete}
+          />
         )}
       </div>
-      
-      
-      
-      
     </div>
   )
 }
