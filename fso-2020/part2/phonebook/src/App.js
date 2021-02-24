@@ -1,39 +1,31 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Person from './components/person/Person'
 import Filter from './components/filter/Filter'
 import PersonForm from './components/personForm/PersonForm'
 import toTitleCase from './utils/toTitleCase'
+import personsServices from './services/persons'
 
 const App= () => {
-  //  todos
-  //  * add axios lib
-  //
+    const [newName, setNewName ] = useState('')
+    const [newNumber, setNewNumber] = useState('')
+    const [filter, setFilter] = useState('')
+    const [persons, setPersons] = useState(null)
 
-  const [persons, setPersons] = useState(
-    [
-      { name: 'Arto Hellas',
-        number: '040-1234567'
-      },
-      { name: 'Ada Lovelace', 
-        number: '39-44-5323523'
-      },
-      { name: 'Dan Abramov', 
-        number: '12-43-234345'
-      },
-      { name: 'Mary Poppendieck', 
-        number: '39-23-6423122'
-      },
-    ]
-  ) 
-
-  const [newName, setNewName ] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
+    useEffect(()=>{
+        personsServices
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
+            })}
+    ,[])
 
   const alreadyAdded = (name) =>{
     return persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
   }
 
+  const findNameWithId =(id) => {
+        return persons.find(person=> person.id === id).["name"]
+  }
   const alreadyAddedWarnning = (name) => window.alert(`${name.toUpperCase()} is already added to the phonebook`)
 
   const handleChange = (e) => {
@@ -54,19 +46,39 @@ const App= () => {
 
   const handleSubmit = (event) =>{
     event.preventDefault()
-    console.log('this event is', event)
     if (alreadyAdded(newName)) {
+
       alreadyAddedWarnning(newName)
     } else {
       const newNameObject = {
         name: toTitleCase(newName),
         number: newNumber
       }
-      setPersons(persons.concat(newNameObject))
+      console.log('newPerson is ',newNameObject)
+
+      personsServices
+        .create(newNameObject)
+        .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+        })
     }
 
-    setNewName('')
-    setNewNumber('')
+  }
+
+  const handleDelete = (id) => {
+        const deleteName = findNameWithId(id)
+        if (window.confirm(`Do you really want to delete ${deleteName}`) ) {
+          window.open("exit.html", "deleting!");
+        }
+        personsServices
+          .deletePerson(id)
+          .then(() =>{
+              setPersons(persons.filter((p) => p.id !== id));
+          })
+      setNewNumber('')
+      setNewName('')
   }
 
   return (
@@ -87,11 +99,11 @@ const App= () => {
 
       <h2>Numbers</h2>
       <div>
-        { filter === '' && persons.map( person => 
-          <Person name={person.name} number={person.number} />
+        { filter === '' && persons !== null && persons.map( person =>
+          <Person name={person.name} number={person.number} id={person.id} handleDelete={handleDelete}/>
         )}
-        { filter !== '' && searchNames(filter).map( person => 
-          < Person name={person.name} number={person.number} />
+        { filter !== '' && persons !== null && searchNames(filter).map( person =>
+          < Person name={person.name} number={person.number} id={person.id} handleDelete={handleDelete} />
         )}
       </div>
       
