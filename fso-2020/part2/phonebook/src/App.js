@@ -19,12 +19,26 @@ const App= () => {
             })}
     ,[])
 
+  const updatePersonWithNewNumber = (person, updatenNumber) => {
+    const newPerson = {
+      ...person,
+        number: updatenNumber
+    }
+      personsServices
+          .update(person.id, newPerson)
+          .then( returnedPerson => {
+              setPersons(persons.map(person => person.name !== newName ? person : returnedPerson ))
+          })
+      setNewName('')
+      setNewNumber('')
+  }
+
   const alreadyAdded = (name) =>{
-    return persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
+    return  persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
   }
 
   const findNameWithId =(id) => {
-        return persons.find(person=> person.id === id).["name"]
+        return persons.find(person=> person.id === id).name
   }
   const alreadyAddedWarnning = (name) => window.alert(`${name.toUpperCase()} is already added to the phonebook`)
 
@@ -38,47 +52,61 @@ const App= () => {
 
   const handleAddNumber = (e) =>{
     setNewNumber(e.target.value)
+      console.log(`adding new number, ${newNumber}`)
   }
 
   const searchNames = (filter) => {
     return persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
   }
 
-  const handleSubmit = (event) =>{
+  const handleSubmit = (event) => {
     event.preventDefault()
-    if (alreadyAdded(newName)) {
+      if (newName === '' || newNumber === '') {
+          window.alert('both name and number can NOT be empty, please input')
+      } else if (alreadyAdded(newName)) {
+          console.log(`argument newName passed to function handleSubmit is ${newName}`)
+          console.log(`argument newNumber passed to function handleSubmit is ${newNumber}`)
+          const oldEntry = alreadyAdded(newName)
+            console.log(oldEntry.number)
+          if (newNumber === oldEntry.number) {
+            alreadyAddedWarnning(newName)
+        } else {
+              if (window.confirm(`${oldEntry.name} already added to the phonebook. Do you want to update 
+              the phone number with ${newNumber}?`)){
+                  updatePersonWithNewNumber(oldEntry, newNumber)
+              }
 
-      alreadyAddedWarnning(newName)
+        }
     } else {
-      const newNameObject = {
-        name: toTitleCase(newName),
-        number: newNumber
-      }
-      console.log('newPerson is ',newNameObject)
+        const newPersonObject = {
+            name: toTitleCase(newName),
+            number: newNumber
+        }
+        console.log('new Person is ', newPersonObject)
 
-      personsServices
-        .create(newNameObject)
-        .then(returnedPerson => {
-            setPersons(persons.concat(returnedPerson))
-            setNewName('')
-            setNewNumber('')
-        })
+        personsServices
+            .create(newPersonObject)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
+                setNewName('')
+                setNewNumber('')
+            })
     }
-
   }
+
 
   const handleDelete = (id) => {
         const deleteName = findNameWithId(id)
-        if (window.confirm(`Do you really want to delete ${deleteName}`) ) {
-          window.open("exit.html", "deleting!");
+        console.log(deleteName)
+        if ( window.confirm(`you really want to remove the entry ${deleteName}?`) ) {
+            personsServices
+                .deletePerson(id)
+                .then(() =>{
+                    setPersons(persons.filter(person => person.id !== id));
+                })
+            setNewNumber('')
+            setNewName('')
         }
-        personsServices
-          .deletePerson(id)
-          .then(() =>{
-              setPersons(persons.filter((p) => p.id !== id));
-          })
-      setNewNumber('')
-      setNewName('')
   }
 
   return (
@@ -109,13 +137,13 @@ const App= () => {
           />
         )}
         { filter !== '' && persons !== null && searchNames(filter).map( person =>
-          < Person
+            < Person
               name={person.name}
               number={person.number}
               id={person.id}
               handleDelete={handleDelete}
-          />
-        )}
+            />)
+        }
       </div>
     </div>
   )
