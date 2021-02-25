@@ -1,35 +1,45 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Person from './components/person/Person'
 import Filter from './components/filter/Filter'
 import PersonForm from './components/personForm/PersonForm'
 import toTitleCase from './utils/toTitleCase'
+import personsServices from './services/persons'
 
 const App= () => {
-  const [persons, setPersons] = useState(
-    [
-      { name: 'Arto Hellas',
-        number: '040-1234567'
-      },
-      { name: 'Ada Lovelace', 
-        number: '39-44-5323523'
-      },
-      { name: 'Dan Abramov', 
-        number: '12-43-234345'
-      },
-      { name: 'Mary Poppendieck', 
-        number: '39-23-6423122'
-      },
-    ]
-  ) 
+    const [newName, setNewName ] = useState('')
+    const [newNumber, setNewNumber] = useState('')
+    const [filter, setFilter] = useState('')
+    const [persons, setPersons] = useState(null)
 
-  const [newName, setNewName ] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
+    useEffect(()=>{
+        personsServices
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
+            })}
+    ,[])
 
-  const alreadyAdded = (name) =>{
-    return persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
+  const updatePersonWithNewNumber = (person, updatenNumber) => {
+    const newPerson = {
+      ...person,
+        number: updatenNumber
+    }
+      personsServices
+          .update(person.id, newPerson)
+          .then( returnedPerson => {
+              setPersons(persons.map(person => person.name !== newName ? person : returnedPerson ))
+          })
+      setNewName('')
+      setNewNumber('')
   }
 
+  const alreadyAdded = (name) =>{
+    return  persons.find(person=> person.name.toUpperCase() === name.toUpperCase())
+  }
+
+  const findNameWithId =(id) => {
+        return persons.find(person=> person.id === id).name
+  }
   const alreadyAddedWarnning = (name) => window.alert(`${name.toUpperCase()} is already added to the phonebook`)
 
   const handleChange = (e) => {
@@ -42,26 +52,61 @@ const App= () => {
 
   const handleAddNumber = (e) =>{
     setNewNumber(e.target.value)
+      console.log(`adding new number, ${newNumber}`)
   }
 
   const searchNames = (filter) => {
     return persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
   }
 
-  const handleSubmit = (e) =>{
-    e.preventDefault()
-    console.log('this event is', e)
-    if (alreadyAdded(newName)) {
-      alreadyAddedWarnning(newName)
+  const handleSubmit = (event) => {
+    event.preventDefault()
+      if (newName === '' || newNumber === '') {
+          window.alert('both name and number can NOT be empty, please input')
+      } else if (alreadyAdded(newName)) {
+          console.log(`argument newName passed to function handleSubmit is ${newName}`)
+          console.log(`argument newNumber passed to function handleSubmit is ${newNumber}`)
+          const oldEntry = alreadyAdded(newName)
+            console.log(oldEntry.number)
+          if (newNumber === oldEntry.number) {
+            alreadyAddedWarnning(newName)
+        } else {
+              if (window.confirm(`${oldEntry.name} already added to the phonebook. Do you want to update 
+              the phone number with ${newNumber}?`)){
+                  updatePersonWithNewNumber(oldEntry, newNumber)
+              }
+
+        }
     } else {
-      const newNameObject = {
-        name: toTitleCase(newName),
-        number: newNumber
-      }
-      setPersons(persons.concat(newNameObject))
+        const newPersonObject = {
+            name: toTitleCase(newName),
+            number: newNumber
+        }
+        console.log('new Person is ', newPersonObject)
+
+        personsServices
+            .create(newPersonObject)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
+                setNewName('')
+                setNewNumber('')
+            })
     }
-    setNewName('')
-    setNewNumber('')
+  }
+
+
+  const handleDelete = (id) => {
+        const deleteName = findNameWithId(id)
+        console.log(deleteName)
+        if ( window.confirm(`you really want to remove the entry ${deleteName}?`) ) {
+            personsServices
+                .deletePerson(id)
+                .then(() =>{
+                    setPersons(persons.filter(person => person.id !== id));
+                })
+            setNewNumber('')
+            setNewName('')
+        }
   }
 
   return (
@@ -82,17 +127,24 @@ const App= () => {
 
       <h2>Numbers</h2>
       <div>
-        { filter === '' && persons.map( person => 
-          <Person name={person.name} number={person.number} />
+        { filter === '' && persons !== null && persons.map( person =>
+          <Person
+              key={person.id}
+              name={person.name}
+              number={person.number}
+              id={person.id}
+              handleDelete={handleDelete}
+          />
         )}
-        { filter !== '' && searchNames(filter).map( person => 
-          < Person name={person.name} number={person.number} />
-        )}
+        { filter !== '' && persons !== null && searchNames(filter).map( person =>
+            < Person
+              name={person.name}
+              number={person.number}
+              id={person.id}
+              handleDelete={handleDelete}
+            />)
+        }
       </div>
-      
-      
-      
-      
     </div>
   )
 }
